@@ -7,4 +7,4 @@ RUN bundle install
 
 COPY . .
 
-CMD bundle exec rake test
+CMD bundle exec rake spec
