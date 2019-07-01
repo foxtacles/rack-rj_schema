@@ -42,8 +42,6 @@ module Rack
       attributes.except(*attributes.slice(*@unveil).values.flat_map(&:keys))
     end
 
-    private_class_method
-
     def self.method
       name.demodulize.underscore.split('_').first
     end

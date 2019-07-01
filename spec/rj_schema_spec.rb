@@ -1,6 +1,8 @@
 require File.expand_path('../spec_helper', __FILE__)
 require File.expand_path('../interfaces/test_api/request_objects/post_method', __FILE__)
+require File.expand_path('../interfaces/test_api/request_objects/get_method', __FILE__)
 require File.expand_path('../interfaces/test_api/view_models/post_method', __FILE__)
+require File.expand_path('../interfaces/test_api/view_models/get_method', __FILE__)
 
 Rack::RjSchemaObject.schema_file_root = 'spec'
 
@@ -25,6 +27,21 @@ describe Rack::RjSchema do
 
     it 'fails due to invalid JSON' do
       post '/method', '{asdddddd:', { 'CONTENT_TYPE' => 'application/json' }
+
+      assert last_response.status == 400
+    end
+  end
+
+  describe 'processing GET request' do
+    it 'succeeds' do
+      get '/method', {int: 6}
+
+      assert last_response.status == 200
+      assert_equal({request_object_class: Interfaces::TestApi::RequestObjects::GetMethod}.to_json, last_response.body)
+    end
+
+    it 'fails due to request schema error' do
+      get '/method', {int: 2}
 
       assert last_response.status == 400
     end

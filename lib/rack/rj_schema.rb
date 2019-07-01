@@ -1,5 +1,6 @@
 require 'json'
 require 'active_support/core_ext/string/inflections'
+require 'active_support/core_ext/hash/keys'
 
 module Rack
   class RjSchema
@@ -25,7 +26,7 @@ module Rack
 
       return FAILURE_RESPONSE if @halt_when_invalid && !env[REQUEST_OBJECT].valid?
 
-      code, headers, body = @app.call(env)
+      code, headers = @app.call(env)
       [code, headers.merge('Content-Type' => 'application/json'), view_model(request).to_json]
     end
 
