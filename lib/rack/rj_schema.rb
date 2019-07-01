@@ -16,14 +16,16 @@ module Rack
     def call(env)
       request = Rack::Request.new(env)
 
-      env[REQUEST_OBJECT] = request_object(request)
+      begin
+        env[REQUEST_OBJECT] = request_object(request)
+      rescue JSON::ParserError
+        return FAILURE_RESPONSE
+      end
+
       return FAILURE_RESPONSE if @halt_when_invalid && !env[REQUEST_OBJECT].valid?
 
       code, headers, body = @app.call(env)
-
       [code, headers.merge('Content-Type' => 'application/json'), view_model(request).to_json]
-    rescue JSON::ParserError
-      FAILURE_RESPONSE
     end
 
     private
@@ -46,7 +48,10 @@ module Rack
     end
 
     def request_params(request)
-      %w[GET DELETE].include?(request.request_method) ? request.params.deep_symbolize_keys : JSON.parse(request.body.read, symbolize_names: true)
+      body = request.body.read
+      request.body.rewind
+
+      %w[GET DELETE].include?(request.request_method) ? request.params.deep_symbolize_keys : JSON.parse(body, symbolize_names: true)
     end
   end
 end

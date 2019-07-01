@@ -22,5 +22,11 @@ describe Rack::RjSchema do
 
       assert last_response.status == 400
     end
+
+    it 'fails due to invalid JSON' do
+      post '/method', '{asdddddd:', { 'CONTENT_TYPE' => 'application/json' }
+
+      assert last_response.status == 400
+    end
   end
 end
