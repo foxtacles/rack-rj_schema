@@ -1,0 +1,30 @@
+PATH
+  remote: .
+  specs:
+    rack-rj_schema (0.1.0)
+      rack
+      rj_schema
+
+GEM
+  remote: https://rubygems.org/
+  specs:
+    minitest (5.11.3)
+    rack (2.0.7)
+    rack-test (1.1.0)
+      rack (>= 1.0, < 3)
+    rake (12.3.2)
+    rake-compiler (1.0.7)
+      rake
+    rj_schema (0.2.0)
+      rake-compiler (~> 1.0)
+
+PLATFORMS
+  ruby
+
+DEPENDENCIES
+  minitest (~> 5.0)
+  rack-rj_schema!
+  rack-test
+
+BUNDLED WITH
+   1.16.5
