@@ -1,6 +1,9 @@
 require 'json'
+
 require 'active_support/core_ext/string/inflections'
 require 'active_support/core_ext/hash/keys'
+
+require 'rack/rj_schema_object'
 
 module Rack
   class RjSchema
