@@ -1,0 +1,14 @@
+{
+  "$schema": "http://json-schema.org/draft-06/schema#",
+  "properties": {
+    "request_object_class": {
+      "type": "string",
+      "enum": ["Interfaces::TestApi::RequestObjects::GetMethod"]
+    }
+  },
+  "required": [
+    "request_object_class"
+  ],
+  "type": "object",
+  "additionalProperties": false
+}
