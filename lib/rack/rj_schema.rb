@@ -34,11 +34,13 @@ module Rack
 
     def request_object(request)
       klass = [@namespace.to_s, 'RequestObjects', *endpoint_path(request)].join('::')
+      define_class(klass) unless Object.const_defined?(klass)
       klass.constantize.new(request_params(request))
     end
 
     def view_model(request)
       klass = [@namespace.to_s, 'ViewModels', *endpoint_path(request)].join('::')
+      define_class(klass) unless Object.const_defined?(klass)
       klass.constantize.new(request.env[VIEW_MODEL] || {})
     end
 
@@ -54,6 +56,19 @@ module Rack
       request.body.rewind
 
       %w[GET DELETE].include?(request.request_method) ? request.params.deep_symbolize_keys : JSON.parse(body, symbolize_names: true)
+    end
+
+    def define_class(path)
+      modules = ["Object"] + path.split("::")
+      klass = modules.pop
+
+      result = modules.reduce do |sum, m|
+        target = sum + "::" + m
+        sum.constantize.const_set(m, Module.new) unless Object.const_defined?(target)
+        target
+      end
+
+      result.constantize.const_set(klass, Class.new(Rack::RjSchemaObject))
     end
   end
 end

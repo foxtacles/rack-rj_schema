@@ -1,8 +1,4 @@
 require File.expand_path('../spec_helper', __FILE__)
-require File.expand_path('../interfaces/test_api/request_objects/post_method', __FILE__)
-require File.expand_path('../interfaces/test_api/request_objects/get_method', __FILE__)
-require File.expand_path('../interfaces/test_api/view_models/post_method', __FILE__)
-require File.expand_path('../interfaces/test_api/view_models/get_method', __FILE__)
 
 Rack::RjSchemaObject.schema_file_root = 'spec'
 

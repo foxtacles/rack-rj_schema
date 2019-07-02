@@ -5,6 +5,7 @@ require 'rack/builder'
 require 'json'
 
 require File.expand_path('../../lib/rack/rj_schema', __FILE__)
+require File.expand_path('../../lib/rack/rj_schema_object', __FILE__)
 
 class TestApp
   def call(env)

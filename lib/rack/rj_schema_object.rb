@@ -9,7 +9,9 @@ module Rack
     attr_reader :errors
     attr_reader :last_url
 
-    def initialize(attributes, unveil: nil, raise_on_error: false)
+    def initialize(attributes, unveil: nil, raise_on_error: nil)
+      raise_on_error = self.class.name.include?('ViewModels::') if raise_on_error.nil?
+
       @attributes = attributes
       @errors = self.class.validate(to_json)
 
