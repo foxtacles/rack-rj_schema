@@ -26,6 +26,13 @@ describe Rack::RjSchema do
 
       assert last_response.status == 400
     end
+
+    it 'forwards invalid response' do
+      post '/method', JSON.dump(int: 6), { 'CONTENT_TYPE' => 'application/json', 'ERROR' => 'true' }
+
+      assert last_response.status == 400
+      assert_equal('error', last_response.body)
+    end
   end
 
   describe 'processing GET request' do

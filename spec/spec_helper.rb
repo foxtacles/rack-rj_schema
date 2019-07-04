@@ -11,7 +11,9 @@ class TestApp
   def call(env)
     request_object = env[Rack::RjSchema::REQUEST_OBJECT]
     env[Rack::RjSchema::VIEW_MODEL] = {request_object_class: request_object.class.name}
-    [200, {'Content-Type' => 'application/json'}, {}]
+
+    return [400, {}, ['error']] if env.key?('ERROR')
+    [200, {'Content-Type' => 'application/json'}, ['{}']]
   end
 end
 
