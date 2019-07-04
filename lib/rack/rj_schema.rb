@@ -30,7 +30,7 @@ module Rack
       return FAILURE_RESPONSE if @halt_when_invalid && !env[REQUEST_OBJECT].valid?
 
       code, headers = @app.call(env)
-      [code, headers.merge('Content-Type' => 'application/json'), view_model(request).to_json]
+      [code, headers.merge('Content-Type' => 'application/json'), [view_model(request).to_json]]
     end
 
     private
