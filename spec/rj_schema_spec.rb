@@ -13,6 +13,7 @@ describe Rack::RjSchema do
 
       assert last_response.status == 200
       assert_equal({request_object_class: Interfaces::TestApi::RequestObjects::PostMethod}.to_json, last_response.body)
+      assert_equal(last_response.headers['Content-Length'].to_i, last_response.body.bytesize)
     end
 
     it 'fails due to request schema error' do

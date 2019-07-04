@@ -32,7 +32,8 @@ module Rack
       code, headers, response = @app.call(env)
       return [code, headers, response] if code >= 300 || code < 200
 
-      [code, headers.merge('Content-Type' => 'application/json'), [view_model(request).to_json]]
+      body = view_model(request).to_json
+      [code, headers.merge('Content-Type' => 'application/json', 'Content-Length' => body.bytesize), [body]]
     end
 
     private
