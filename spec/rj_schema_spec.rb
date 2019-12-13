@@ -9,7 +9,7 @@ describe Rack::RjSchema do
 
   describe 'processing POST request' do
     it 'succeeds' do
-      post '/method', JSON.dump(int: 6), { 'CONTENT_TYPE' => 'application/json' }
+      post '/method', Oj.dump({int: 6}, mode: :compat), { 'CONTENT_TYPE' => 'application/json' }
 
       assert last_response.status == 200
       assert_equal({request_object_class: Interfaces::TestApi::RequestObjects::PostMethod}.to_json, last_response.body)
@@ -17,7 +17,7 @@ describe Rack::RjSchema do
     end
 
     it 'fails due to request schema error' do
-      post '/method', JSON.dump(int: 2), { 'CONTENT_TYPE' => 'application/json' }
+      post '/method', Oj.dump({int: 2}, mode: :compat), { 'CONTENT_TYPE' => 'application/json' }
 
       assert last_response.status == 400
     end
@@ -29,7 +29,7 @@ describe Rack::RjSchema do
     end
 
     it 'forwards invalid response' do
-      post '/method', JSON.dump(int: 6), { 'CONTENT_TYPE' => 'application/json', 'ERROR' => 'true' }
+      post '/method', Oj.dump({int: 6}, mode: :compat), { 'CONTENT_TYPE' => 'application/json', 'ERROR' => 'true' }
 
       assert last_response.status == 400
       assert_equal('error', last_response.body)

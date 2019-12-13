@@ -23,7 +23,7 @@ module Rack
 
       begin
         env[REQUEST_OBJECT] = request_object(request)
-      rescue JSON::ParserError
+      rescue Oj::ParseError, EncodingError
         return FAILURE_RESPONSE
       end
 
@@ -61,7 +61,7 @@ module Rack
       body = request.body.read
       request.body.rewind
 
-      %w[GET DELETE].include?(request.request_method) ? request.params.deep_symbolize_keys : JSON.parse(body, symbolize_names: true)
+      %w[GET DELETE].include?(request.request_method) ? request.params.deep_symbolize_keys : Oj.load(body, symbol_keys: true, mode: :compat)
     end
 
     def define_class(path)

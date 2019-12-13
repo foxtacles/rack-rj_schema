@@ -2,7 +2,7 @@ require 'minitest/autorun'
 require 'rack'
 require 'rack/test'
 require 'rack/builder'
-require 'json'
+require 'oj'
 
 require File.expand_path('../../lib/rack/rj_schema', __FILE__)
 require File.expand_path('../../lib/rack/rj_schema_object', __FILE__)

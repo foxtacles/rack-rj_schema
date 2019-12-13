@@ -1,4 +1,4 @@
-require 'json'
+require 'oj'
 require 'rj_schema'
 
 module Rack
@@ -35,7 +35,7 @@ module Rack
     end
 
     def to_json(_opts = {})
-      @to_json ||= JSON.dump(@attributes)
+      @to_json ||= Oj.dump(@attributes, mode: :compat)
     end
 
     def payload
