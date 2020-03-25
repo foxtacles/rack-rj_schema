@@ -11,11 +11,12 @@ module Rack
     VIEW_MODEL = 'rack.rj_schema.view_model'.freeze
     FAILURE_RESPONSE = [400, {}, ['']].freeze
 
-    def initialize(app, namespace:, path:, halt_when_invalid: true)
+    def initialize(app, namespace:, path:, halt_when_invalid: true, verbose_response: false)
       @app = app
       @namespace = namespace
       @path = path
       @halt_when_invalid = halt_when_invalid
+      @verbose_response = verbose_response
     end
 
     def call(env)
@@ -24,10 +25,10 @@ module Rack
       begin
         env[REQUEST_OBJECT] = request_object(request)
       rescue JSON::ParserError
-        return FAILURE_RESPONSE
+        return failure_response(['Invalid JSON'])
       end
 
-      return FAILURE_RESPONSE if @halt_when_invalid && !env[REQUEST_OBJECT].valid?
+      return failure_response(env[REQUEST_OBJECT].errors) if @halt_when_invalid && !env[REQUEST_OBJECT].valid?
 
       code, headers, response = @app.call(env)
       return [code, headers, response] if code >= 300 || code < 200
@@ -37,6 +38,16 @@ module Rack
     end
 
     private
+
+    def failure_response(errors)
+      return FAILURE_RESPONSE unless @verbose_response
+
+      [
+        FAILURE_RESPONSE[0],
+        { CONTENT_TYPE => 'application/json'},
+        [{ errors: errors }.to_json]
+      ]
+    end
 
     def request_object(request)
       klass = [@namespace.to_s, 'RequestObjects', *endpoint_path(request)].join('::')
