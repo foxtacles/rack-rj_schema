@@ -4,7 +4,7 @@ PATH
     rack-rj_schema (0.1.0)
       activesupport
       rack
-      rj_schema
+      rj_schema (~> 1.0)
 
 GEM
   remote: https://rubygems.org/
