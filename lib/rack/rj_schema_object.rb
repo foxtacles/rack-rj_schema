@@ -15,7 +15,7 @@ module Rack
       @attributes = attributes
       @errors = self.class.validate(to_json)
 
-      raise SchemaValidationError.new(errors) if !valid? && raise_on_error
+      raise SchemaValidationError.new(errors[:human_errors]) if !valid? && raise_on_error
 
       if valid? && !@attributes.is_a?(Array)
         if unveil
@@ -31,7 +31,7 @@ module Rack
     end
 
     def valid?
-      errors.empty?
+      errors.values.all?(&:empty?)
     end
 
     def to_json(_opts = {})
@@ -72,7 +72,7 @@ module Rack
     end
 
     def self.validate(attributes)
-      validator.validate(schema.to_sym, attributes)
+      validator.validate(schema.to_sym, attributes, human_errors: true)
     end
 
     def self.schema_file_root

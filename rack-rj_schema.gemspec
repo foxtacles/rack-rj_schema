@@ -15,6 +15,7 @@ Gem::Specification.new 'rack-rj_schema', '0.1.0' do |s|
   s.add_dependency 'activesupport'
   s.add_development_dependency 'minitest', '~> 5.0'
   s.add_development_dependency 'rack-test'
+  s.add_development_dependency 'rake'
   s.add_development_dependency 'pry'
   s.add_development_dependency 'pry-byebug'
 end
