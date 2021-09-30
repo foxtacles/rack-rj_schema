@@ -22,7 +22,7 @@ module Rack
     def call(env)
       request = Rack::Request.new(env)
 
-      if request.content_type == 'application/json'
+      if request.content_type == 'application/json' || %w[GET DELETE].include?(request.request_method)
         begin
           env[REQUEST_OBJECT] = request_object(request)
         rescue JSON::ParserError
