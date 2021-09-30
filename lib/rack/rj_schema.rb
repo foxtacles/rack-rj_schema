@@ -11,27 +11,29 @@ module Rack
     VIEW_MODEL = 'rack.rj_schema.view_model'.freeze
     FAILURE_RESPONSE = [400, {}, ['']].freeze
 
-    def initialize(app, namespace:, path:, halt_when_invalid: true, verbose_response: false)
+    def initialize(app, *args)
       @app = app
-      @namespace = namespace
-      @path = path
-      @halt_when_invalid = halt_when_invalid
-      @verbose_response = verbose_response
+      @namespace = args.last[:namespace]
+      @path = args.last[:path]
+      @halt_when_invalid = args.last.key?(:halt_when_invalid) ? args.last[:halt_when_invalid] : true
+      @verbose_response = args.last.key?(:verbose_response) ? args.last[:verbose_response] : false
     end
 
     def call(env)
       request = Rack::Request.new(env)
 
-      begin
-        env[REQUEST_OBJECT] = request_object(request)
-      rescue JSON::ParserError
-        return failure_response(['Invalid JSON'])
+      if request.content_type == 'application/json'
+        begin
+          env[REQUEST_OBJECT] = request_object(request)
+        rescue JSON::ParserError
+          return failure_response(['Invalid JSON'])
+        end
+
+        return failure_response(env[REQUEST_OBJECT].errors) if @halt_when_invalid && !env[REQUEST_OBJECT].valid?
       end
 
-      return failure_response(env[REQUEST_OBJECT].errors) if @halt_when_invalid && !env[REQUEST_OBJECT].valid?
-
       code, headers, response = @app.call(env)
-      return [code, headers, response] if code >= 300 || code < 200
+      return [code, headers, response] if code >= 300 || code < 200 || headers['Content-Type'] != 'application/json'
 
       body = view_model(request).to_json
       [code, headers.merge('Content-Type' => 'application/json', 'Content-Length' => body.bytesize), [body]]

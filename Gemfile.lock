@@ -32,7 +32,7 @@ GEM
     rack-test (1.1.0)
       rack (>= 1.0, < 3)
     rake (13.0.3)
-    rj_schema (1.0.0)
+    rj_schema (1.0.4)
     tzinfo (2.0.4)
       concurrent-ruby (~> 1.0)
     zeitwerk (2.4.2)
@@ -49,4 +49,4 @@ DEPENDENCIES
   rake
 
 BUNDLED WITH
-   1.17.3
+   2.2.25

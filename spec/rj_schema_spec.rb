@@ -38,14 +38,14 @@ describe Rack::RjSchema do
 
   describe 'processing GET request' do
     it 'succeeds' do
-      get '/method', {int: 6}
+      get '/method', {int: 6}, { 'CONTENT_TYPE' => 'application/json' }
 
       assert last_response.status == 200
       assert_equal({request_object_class: Interfaces::TestApi::RequestObjects::GetMethod}.to_json, last_response.body)
     end
 
     it 'fails due to request schema error' do
-      get '/method', {int: 2}
+      get '/method', {int: 2}, { 'CONTENT_TYPE' => 'application/json' }
 
       assert last_response.status == 400
     end
