@@ -67,7 +67,7 @@ module Rack
       return @@validator_cache[api] unless @@validator_cache[api].nil?
 
       @@validator_cache[api] = ::RjSchema::Validator.new(
-        schema_collection.each_with_object({}) { |file, hash| hash[file.include?('/definitions/') ? ::File.basename(file) : file] = ::File.new(file) }
+        schema_collection.each_with_object({}) { |file, hash| hash[file.include?('/definitions/') ? file.split("/definitions").last : file] = ::File.new(file) }
       )
     end
 
